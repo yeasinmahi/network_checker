@@ -124,7 +124,22 @@ namespace NetworkStatusChecker
 
         private bool GetNetworkStatus()
         {
-            return NetworkInterface.GetIsNetworkAvailable();
+            //return NetworkInterface.GetIsNetworkAvailable();
+            Ping p = new Ping();
+            PingReply r;
+            string s;
+            s = "www.google.com";
+
+            try
+            {
+                r = p.Send(s);
+            }
+            catch
+            {
+                return false;
+            }
+
+            return r.Status == IPStatus.Success;
         }
 
         private void SetNetworkStatus(bool networkUp)
