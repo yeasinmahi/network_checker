@@ -29,6 +29,8 @@
         private void InitializeComponent()
         {
             this.labelStatus = new System.Windows.Forms.Label();
+            this.pictureBox = new System.Windows.Forms.PictureBox();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
             this.SuspendLayout();
             // 
             // labelStatus
@@ -38,14 +40,24 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.labelStatus.AutoSize = true;
             this.labelStatus.BackColor = System.Drawing.Color.Transparent;
-            this.labelStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelStatus.ForeColor = System.Drawing.Color.MidnightBlue;
-            this.labelStatus.Location = new System.Drawing.Point(12, 9);
+            this.labelStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelStatus.ForeColor = System.Drawing.Color.White;
+            this.labelStatus.Location = new System.Drawing.Point(50, 13);
             this.labelStatus.Name = "labelStatus";
-            this.labelStatus.Size = new System.Drawing.Size(85, 29);
+            this.labelStatus.Size = new System.Drawing.Size(76, 25);
             this.labelStatus.TabIndex = 0;
             this.labelStatus.Text = "label1";
             this.labelStatus.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // pictureBox
+            // 
+            this.pictureBox.Image = global::NetworkStatusChecker.Properties.Resources.ok;
+            this.pictureBox.Location = new System.Drawing.Point(15, 9);
+            this.pictureBox.Name = "pictureBox";
+            this.pictureBox.Size = new System.Drawing.Size(29, 29);
+            this.pictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox.TabIndex = 1;
+            this.pictureBox.TabStop = false;
             // 
             // MainForm
             // 
@@ -53,6 +65,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Gainsboro;
             this.ClientSize = new System.Drawing.Size(213, 52);
+            this.Controls.Add(this.pictureBox);
             this.Controls.Add(this.labelStatus);
             this.ForeColor = System.Drawing.SystemColors.ButtonFace;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
@@ -64,6 +77,7 @@
             this.Text = "Network Status Cheker";
             this.TopMost = true;
             this.Load += new System.EventHandler(this.MainForm_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -72,6 +86,7 @@
         #endregion
 
         private System.Windows.Forms.Label labelStatus;
+        private System.Windows.Forms.PictureBox pictureBox;
     }
 }
 

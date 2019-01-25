@@ -102,7 +102,7 @@ namespace NetworkStatusChecker
                 }
 
             }
-            if (isShown && startPosY > Screen.PrimaryScreen.WorkingArea.Height + (Height / 2))
+            if (isShown && startPosY > Screen.PrimaryScreen.WorkingArea.Height + Height)
             {
                 isShown = false;
                 counter = 0;
@@ -169,11 +169,13 @@ namespace NetworkStatusChecker
         {
             labelStatus.Text = "Network Ok";
             BackColor = System.Drawing.Color.Green;
+            pictureBox.Image = Properties.Resources.ok;
         }
         private void SetNetworkDown()
         {
             labelStatus.Text = "Network Down";
             BackColor = System.Drawing.Color.Red;
+            pictureBox.Image = Properties.Resources.notOk;
         }
     }
     
