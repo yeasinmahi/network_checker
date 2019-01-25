@@ -7,10 +7,10 @@ namespace NetworkStatusChecker
 {
     public partial class MainForm : Form
     {
-        private System.Timers.Timer timer;
+        private System.Timers.Timer timer,pingTimer;
         private int startPosX;
         private int startPosY;
-        private bool isShown = false;
+        private bool isShown = false,IsAvailableNetwork=true;
         private readonly int holdTimer = 300;
         private int counter = 0;
         public MainForm()
@@ -34,8 +34,21 @@ namespace NetworkStatusChecker
             timer.Interval = 5;
             timer.Elapsed += new ElapsedEventHandler(timer_Tick);
 
-            //timer.Tick += timer_Tick;
+            pingTimer = new System.Timers.Timer();
+            pingTimer.Interval = 1000;
+            pingTimer.Elapsed += new ElapsedEventHandler(pingTimer_Tick);
+            pingTimer.Enabled = true;
         }
+
+        private void pingTimer_Tick(object sender, ElapsedEventArgs e)
+        {
+            if (GetNetworkStatus()!=IsAvailableNetwork)
+            {
+                IsAvailableNetwork = GetNetworkStatus();
+                SetNetworkStatus(IsAvailableNetwork);
+            }
+        }
+
         protected override void OnLoad(EventArgs e)
         {
             // Move window out of screen
@@ -119,13 +132,41 @@ namespace NetworkStatusChecker
             timer.Enabled = true;
             if (networkUp)
             {
-                ThreadHelper.SetText(this, labelStatus, "Network Ok");
+                //ThreadHelper.SetText(this, labelStatus, "Network Ok");
                 //labelStatus.Text = "Network Ok";
+                if (InvokeRequired)
+                {
+                    // after we've done all the processing, 
+                    this.Invoke(new MethodInvoker(delegate
+                    {
+                        labelStatus.Text = "Network Ok";
+                        this.BackColor = System.Drawing.Color.Green;
+                    }));
+                }
+                else
+                {
+                    labelStatus.Text = "Network Ok";
+                    this.BackColor = System.Drawing.Color.Green;
+                }
             }
             else
             {
-                ThreadHelper.SetText(this, labelStatus, "Network Down");
+                //ThreadHelper.SetText(this, labelStatus, "Network Down");
                 //labelStatus.Text = "Network Down";
+                if (InvokeRequired)
+                {
+                    // after we've done all the processing, 
+                    this.Invoke(new MethodInvoker(delegate
+                    {
+                        labelStatus.Text = "Network Down";
+                        this.BackColor = System.Drawing.Color.Red;
+                    }));
+                }
+                else
+                {
+                    labelStatus.Text = "Network Down";
+                    this.BackColor = System.Drawing.Color.Red;
+                }
             }
         }
     }
