@@ -91,7 +91,7 @@ namespace NetworkStatusChecker
                 if (InvokeRequired)
                 {
                     // after we've done all the processing, 
-                    this.Invoke(new MethodInvoker(delegate
+                    Invoke(new MethodInvoker(delegate
                     {
                         SetDesktopLocation(startPosX, startPosY);
                     }));
@@ -132,21 +132,19 @@ namespace NetworkStatusChecker
             timer.Enabled = true;
             if (networkUp)
             {
-                //ThreadHelper.SetText(this, labelStatus, "Network Ok");
+                // ThreadHelper.SetText(this, labelStatus, "Network Ok");
                 //labelStatus.Text = "Network Ok";
                 if (InvokeRequired)
                 {
                     // after we've done all the processing, 
-                    this.Invoke(new MethodInvoker(delegate
+                    Invoke(new MethodInvoker(delegate
                     {
-                        labelStatus.Text = "Network Ok";
-                        this.BackColor = System.Drawing.Color.Green;
+                        SetNetworkUp();
                     }));
                 }
                 else
                 {
-                    labelStatus.Text = "Network Ok";
-                    this.BackColor = System.Drawing.Color.Green;
+                    SetNetworkUp();
                 }
             }
             else
@@ -156,18 +154,27 @@ namespace NetworkStatusChecker
                 if (InvokeRequired)
                 {
                     // after we've done all the processing, 
-                    this.Invoke(new MethodInvoker(delegate
+                    Invoke(new MethodInvoker(delegate
                     {
-                        labelStatus.Text = "Network Down";
-                        this.BackColor = System.Drawing.Color.Red;
+                        SetNetworkDown();
                     }));
                 }
                 else
                 {
-                    labelStatus.Text = "Network Down";
-                    this.BackColor = System.Drawing.Color.Red;
+                    SetNetworkDown();
                 }
             }
         }
+        private void SetNetworkUp()
+        {
+            labelStatus.Text = "Network Ok";
+            BackColor = System.Drawing.Color.Green;
+        }
+        private void SetNetworkDown()
+        {
+            labelStatus.Text = "Network Down";
+            BackColor = System.Drawing.Color.Red;
+        }
     }
+    
 }
