@@ -7,56 +7,78 @@ namespace NetworkStatusChecker
 {
     public partial class MainForm : Form
     {
-        private System.Timers.Timer timer,pingTimer;
-        private int startPosX;
-        private int startPosY;
-        private bool isShown = false,IsAvailableNetwork=true;
-        private readonly int holdTimer = 300;
-        private int counter = 0;
+        private System.Timers.Timer _timer,_pingTimer,_speedTestTimer;
+        private int _startPosX;
+        private int _startPosY;
+        private bool _isShown = false,_isAvailableNetwork=true;
+        private readonly int _holdTimer = 300;
+        private int _counter = 0;
         public MainForm()
         {
             InitializeComponent();
-            Init();
-        }
-
-        public void Init()
-        {
-            // We want our window to be the top most
-            TopMost = true;
-            // Pop doesn't need to be shown in task bar
-            ShowInTaskbar = false;
-
         }
         public void CreateTimer()
         {
             // Create and run timer for animation
-            timer = new System.Timers.Timer();
-            timer.Interval = 5;
-            timer.Elapsed += new ElapsedEventHandler(timer_Tick);
+            _timer = new System.Timers.Timer();
+            _timer.Interval = 5;
+            _timer.Elapsed += new ElapsedEventHandler(timer_Tick);
 
-            pingTimer = new System.Timers.Timer();
-            pingTimer.Interval = 1000;
-            pingTimer.Elapsed += new ElapsedEventHandler(pingTimer_Tick);
-            pingTimer.Enabled = true;
+            //create and run timer for ping and network test 
+            _pingTimer = new System.Timers.Timer();
+            _pingTimer.Interval = 1000;
+            _pingTimer.Elapsed += new ElapsedEventHandler(pingTimer_Tick);
+            _pingTimer.Enabled = true;
+
+            //create and run timer for upload and download speed test
+            _speedTestTimer = new System.Timers.Timer();
+            _speedTestTimer.Interval = 15000;
+            _speedTestTimer.Elapsed += new ElapsedEventHandler(speedTestTimer_Tick);
+            _speedTestTimer.Enabled = true;
+        }
+
+        private void speedTestTimer_Tick(object sender, ElapsedEventArgs e)
+        {
+            double speed = MyNetwork.GetDownloadSpeed();
+            if (speed > 0)
+            {
+                if (InvokeRequired)
+                {
+                    // after we've done all the processing, 
+                    Invoke(new MethodInvoker(delegate
+                    {
+                        SetUploadSpeedAndDownloadSpeed(speed, speed);
+                    }));
+                }
+                else
+                {
+                    SetUploadSpeedAndDownloadSpeed(speed, speed);
+                }
+                _timer.Enabled = true;
+            }
+            else
+            {
+                // no speed found
+            }
         }
 
         private void pingTimer_Tick(object sender, ElapsedEventArgs e)
         {
-            if (GetNetworkStatus()!=IsAvailableNetwork)
+            if (MyNetwork.GetNetworkStatus()!=_isAvailableNetwork)
             {
-                IsAvailableNetwork = GetNetworkStatus();
-                SetNetworkStatus(IsAvailableNetwork);
+                _isAvailableNetwork = MyNetwork.GetNetworkStatus();
+                SetNetworkStatus(_isAvailableNetwork);
             }
         }
 
         protected override void OnLoad(EventArgs e)
         {
             // Move window out of screen
-            startPosX = Screen.PrimaryScreen.WorkingArea.Width - Width;
-            startPosY = Screen.PrimaryScreen.WorkingArea.Height;
-            SetDesktopLocation(startPosX, startPosY);
+            _startPosX = Screen.PrimaryScreen.WorkingArea.Width - Width;
+            _startPosY = Screen.PrimaryScreen.WorkingArea.Height;
+            SetDesktopLocation(_startPosX, _startPosY);
             CreateTimer();
-            timer.Enabled = true;
+            _timer.Enabled = true;
             base.OnLoad(e);
 
         }
@@ -64,26 +86,26 @@ namespace NetworkStatusChecker
         private void timer_Tick(object sender, EventArgs e)
         {
             //Lift window by 1 pixels
-            if (isShown)
+            if (_isShown)
             {
-                if (counter > holdTimer)
+                if (_counter > _holdTimer)
                 {
-                    startPosY += 1;
+                    _startPosY += 1;
                 }
                 else
                 {
-                    counter++;
+                    _counter++;
                 }
             }
             else
             {
-                startPosY -= 1;
+                _startPosY -= 1;
             }
 
             //If window is fully visible stop the timer
-            if (startPosY < Screen.PrimaryScreen.WorkingArea.Height - Height)
+            if (_startPosY < Screen.PrimaryScreen.WorkingArea.Height - Height)
             {
-                isShown = true;
+                _isShown = true;
                 //timer.Stop();
             }
             else
@@ -93,58 +115,40 @@ namespace NetworkStatusChecker
                     // after we've done all the processing, 
                     Invoke(new MethodInvoker(delegate
                     {
-                        SetDesktopLocation(startPosX, startPosY);
+                        SetDesktopLocation(_startPosX, _startPosY);
                     }));
                 }
                 else
                 {
-                    SetDesktopLocation(startPosX, startPosY);
+                    SetDesktopLocation(_startPosX, _startPosY);
                 }
 
             }
-            if (isShown && startPosY > Screen.PrimaryScreen.WorkingArea.Height + Height)
+            if (_isShown && _startPosY > Screen.PrimaryScreen.WorkingArea.Height + Height)
             {
-                isShown = false;
-                counter = 0;
-                timer.Enabled = false;
+                _isShown = false;
+                _counter = 0;
+                _timer.Enabled = false;
             }
 
         }
         private void MainForm_Load(object sender, EventArgs e)
         {
-            SetNetworkStatus(GetNetworkStatus());
+            SetNetworkStatus(MyNetwork.GetNetworkStatus());
             NetworkChange.NetworkAvailabilityChanged += new NetworkAvailabilityChangedEventHandler(NetworkChange_NetworkAvailabilityChanged);
 
         }
 
         private void NetworkChange_NetworkAvailabilityChanged(object sender, NetworkAvailabilityEventArgs e)
         {
-            SetNetworkStatus(GetNetworkStatus());
+            SetNetworkStatus(MyNetwork.GetNetworkStatus());
         }
 
-        private bool GetNetworkStatus()
-        {
-            //return NetworkInterface.GetIsNetworkAvailable();
-            Ping p = new Ping();
-            PingReply r;
-            string s;
-            s = "www.google.com";
-
-            try
-            {
-                r = p.Send(s);
-            }
-            catch
-            {
-                return false;
-            }
-
-            return r.Status == IPStatus.Success;
-        }
+        
 
         private void SetNetworkStatus(bool networkUp)
         {
-            timer.Enabled = true;
+            _timer.Enabled = true;
             if (networkUp)
             {
                 // ThreadHelper.SetText(this, labelStatus, "Network Ok");
@@ -152,10 +156,7 @@ namespace NetworkStatusChecker
                 if (InvokeRequired)
                 {
                     // after we've done all the processing, 
-                    Invoke(new MethodInvoker(delegate
-                    {
-                        SetNetworkUp();
-                    }));
+                    Invoke(new MethodInvoker(SetNetworkUp));
                 }
                 else
                 {
@@ -169,10 +170,7 @@ namespace NetworkStatusChecker
                 if (InvokeRequired)
                 {
                     // after we've done all the processing, 
-                    Invoke(new MethodInvoker(delegate
-                    {
-                        SetNetworkDown();
-                    }));
+                    Invoke(new MethodInvoker(SetNetworkDown));
                 }
                 else
                 {
@@ -182,15 +180,24 @@ namespace NetworkStatusChecker
         }
         private void SetNetworkUp()
         {
-            labelStatus.Text = "Network Ok";
-            BackColor = System.Drawing.Color.Green;
-            pictureBox.Image = Properties.Resources.ok;
+            labelStatus.Text = Messages.NetworkHead;
+            labelInformation.Text = Messages.NetworkMessageUp;
+            //BackColor = System.Drawing.Color.Green;
+            pictureBox.Image = Properties.Resources.success;
         }
         private void SetNetworkDown()
         {
-            labelStatus.Text = "Network Down";
-            BackColor = System.Drawing.Color.Red;
-            pictureBox.Image = Properties.Resources.notOk;
+            labelStatus.Text = Messages.NetworkHead;
+            labelInformation.Text = Messages.NetworkMessageDown;
+            //BackColor = System.Drawing.Color.Red;
+            pictureBox.Image = Properties.Resources.error;
+        }
+        private void SetUploadSpeedAndDownloadSpeed(double downloadSpeed, double uploadSpeed)
+        {
+            labelStatus.Text = Messages.SpeedHead;
+            labelInformation.Text = Messages.GetSpeedMessage(downloadSpeed);
+            //BackColor = System.Drawing.Color.Red;
+            pictureBox.Image = Properties.Resources.information;
         }
     }
     
