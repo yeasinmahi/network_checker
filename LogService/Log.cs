@@ -264,7 +264,7 @@ namespace LogService
             PropertyInfo[] propertyInfos = GetProperties(obj);
             var message = string.Empty;
             message = AppendText(message, DateTime.Now.ToShortDateString());
-            message = AppendText(message, DateTime.Now.ToShortTimeString());
+            message = AppendText(message, DateTime.Now.ToLongTimeString());
             foreach (PropertyInfo p in propertyInfos)
             {
                 message = AppendText(message, p.GetValue(obj, null).ToString());
@@ -275,6 +275,10 @@ namespace LogService
                 {
                     lock (LogConfig.GetLocker())
                     {
+                        if (!Directory.Exists(Path.GetDirectoryName(path)))
+                        {
+                            Directory.CreateDirectory(Path.GetDirectoryName(path));
+                        }
                         if (!File.Exists(path))
                         {
                             // Create a file to write to.

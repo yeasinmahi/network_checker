@@ -81,6 +81,7 @@
     <Compile Include="Log.cs" />
     <Compile Include="LogConfig.cs" />
     <Compile Include="LogUtility.cs" />
+    <Compile Include="Network.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <PropertyGroup>

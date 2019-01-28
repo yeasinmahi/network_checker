@@ -10,7 +10,7 @@ namespace NetworkStatusChecker
         private System.Timers.Timer _timer,_pingTimer,_speedTestTimer;
         private int _startPosX;
         private int _startPosY;
-        private bool _isShown = false,_isAvailableNetwork=true;
+        private bool _isShown = false,_isAvailableNetwork=true,_networkStatus;
         private readonly int _holdTimer = 300;
         private int _counter = 0;
         public MainForm()
@@ -66,10 +66,10 @@ namespace NetworkStatusChecker
 
         private void pingTimer_Tick(object sender, ElapsedEventArgs e)
         {
-            LogWriter.WriteLog();
-            if (MyNetwork.GetNetworkStatus()!=_isAvailableNetwork)
+            _networkStatus = MyNetwork.GetNetworkStatus();
+            if (_networkStatus != _isAvailableNetwork)
             {
-                _isAvailableNetwork = MyNetwork.GetNetworkStatus();
+                _isAvailableNetwork = _networkStatus;
                 SetNetworkStatus(_isAvailableNetwork);
             }
         }
@@ -187,6 +187,7 @@ namespace NetworkStatusChecker
             labelInformation.Text = Messages.NetworkMessageUp;
             //BackColor = System.Drawing.Color.Green;
             pictureBox.Image = Properties.Resources.success;
+            LogWriter.WriteLog("'Network UP'",MyNetwork.GetDownloadSpeed(), MyNetwork.GetUploadSpeed());
         }
         private void SetNetworkDown()
         {
@@ -194,6 +195,7 @@ namespace NetworkStatusChecker
             labelInformation.Text = Messages.NetworkMessageDown;
             //BackColor = System.Drawing.Color.Red;
             pictureBox.Image = Properties.Resources.error;
+            LogWriter.WriteLog("'Network Down'", 0,0);
         }
         private void SetUploadSpeedAndDownloadSpeed(double downloadSpeed, double uploadSpeed)
         {
@@ -201,7 +203,23 @@ namespace NetworkStatusChecker
             labelInformation.Text = Messages.GetSpeedMessage(downloadSpeed, uploadSpeed);
             //BackColor = System.Drawing.Color.Red;
             pictureBox.Image = Properties.Resources.information;
+            LogWriter.WriteLog("'Net Speed Test'", downloadSpeed, uploadSpeed);
         }
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            if (keyData == (Keys.Control | Keys.E))
+            {
+                DialogResult dialog = MessageBox.Show("Do you really want to close the program?", "Network Status Checker ", MessageBoxButtons.YesNo);
+                if (dialog == DialogResult.Yes)
+                {
+                    Application.Exit();
+                }
+                
+                return true;
+            }
+            return base.ProcessCmdKey(ref msg, keyData);
+        }
+
     }
-    
+
 }

@@ -87,11 +87,11 @@
             this.Controls.Add(this.labelStatus);
             this.ForeColor = System.Drawing.SystemColors.ButtonFace;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.KeyPreview = true;
             this.Name = "MainForm";
             this.Opacity = 0.9D;
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Network Status Cheker";
             this.TopMost = true;
             this.Load += new System.EventHandler(this.MainForm_Load);
