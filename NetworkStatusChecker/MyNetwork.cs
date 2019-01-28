@@ -6,36 +6,59 @@ using System.Net.NetworkInformation;
 
 namespace NetworkStatusChecker
 {
+
     public class MyNetwork
     {
-        public static double GetDownloadSpeed()
+        public enum Type
+        {
+            Download,
+            Upload
+        }
+        private static double GetSpeed(Type type)
         {
             WebClient webClient = new WebClient();
+            webClient.Credentials = new NetworkCredential("erp", "erp123");
             Stopwatch sw = Stopwatch.StartNew();
             FileInfo fileInfo;
+            double speed = 0;
             try
             {
-                webClient.DownloadFile("http://dl.google.com/googletalk/googletalk-setup.exe", Messages.Tempfile);
-                sw.Stop();
 
-                fileInfo = new FileInfo(Messages.Tempfile);
+                if (type.Equals(Type.Download))
+                {
+                    webClient.DownloadFile(Messages.DownloadUrl, Messages.Tempfile);
+                    sw.Stop();
+                    fileInfo = new FileInfo(Messages.Tempfile);
+                    speed =  (fileInfo.Length / (sw.Elapsed.Milliseconds * 1.024*1024));
+                }
+                else
+                {
+                    webClient.UploadData(Messages.UploadUrl, Properties.Resources.a);
+                    sw.Stop();
+                    speed =  (Properties.Resources.a.Length / (sw.Elapsed.Milliseconds * 1.024*1024));
+                }
+                
+                
             }
-            catch
+            catch(Exception ex)
             {
                 return 0;
             }
+            if (type.Equals(Type.Download))
+            {
+                FileHelper.DeleteFile(Messages.Tempfile);
+            }
+            else
+            {
+                FileHelper.DeleteFile(Messages.UploadUrl);
+            }
             
-            long speed = 0;
-            try
-            {
-                speed = fileInfo.Length / (sw.Elapsed.Seconds * 1024);
-            }
-            catch
-            {
-                // ignored
-            }
-            FileHelper.DeleteFile(Messages.Tempfile);
             return speed;
+            
+        }
+        public static double GetDownloadSpeed()
+        {
+            return GetSpeed(Type.Download);
         }
         public static bool GetNetworkStatus()
         {
@@ -55,6 +78,11 @@ namespace NetworkStatusChecker
             }
 
             return r.Status == IPStatus.Success;
+        }
+
+        public static double GetUploadSpeed()
+        {
+            return GetSpeed(Type.Upload);
         }
     }
 }

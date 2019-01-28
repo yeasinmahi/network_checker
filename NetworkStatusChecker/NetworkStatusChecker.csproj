@@ -33,6 +33,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -40,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FileHelper.cs" />
+    <Compile Include="LogWriter.cs" />
     <Compile Include="MyNetwork.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
@@ -86,6 +88,15 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\success.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\a.exe" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\LogService\LogService.csproj">
+      <Project>{C6D83867-3753-4440-AB90-0B218FFF3F6F}</Project>
+      <Name>LogService</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

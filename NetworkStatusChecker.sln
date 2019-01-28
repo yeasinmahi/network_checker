@@ -4,6 +4,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 15.0.28010.2026
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetworkStatusChecker", "NetworkStatusChecker\NetworkStatusChecker.csproj", "{DD76E002-4D0E-4809-AFE9-ECFAAD80E9F9}"
+	ProjectSection(ProjectDependencies) = postProject
+		{C6D83867-3753-4440-AB90-0B218FFF3F6F} = {C6D83867-3753-4440-AB90-0B218FFF3F6F}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LogService", "LogService\LogService.csproj", "{C6D83867-3753-4440-AB90-0B218FFF3F6F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +20,10 @@ Global
 		{DD76E002-4D0E-4809-AFE9-ECFAAD80E9F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DD76E002-4D0E-4809-AFE9-ECFAAD80E9F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DD76E002-4D0E-4809-AFE9-ECFAAD80E9F9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C6D83867-3753-4440-AB90-0B218FFF3F6F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C6D83867-3753-4440-AB90-0B218FFF3F6F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C6D83867-3753-4440-AB90-0B218FFF3F6F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C6D83867-3753-4440-AB90-0B218FFF3F6F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -39,20 +39,22 @@ namespace NetworkStatusChecker
 
         private void speedTestTimer_Tick(object sender, ElapsedEventArgs e)
         {
-            double speed = MyNetwork.GetDownloadSpeed();
-            if (speed > 0)
+            double downloadSpeed = MyNetwork.GetDownloadSpeed();
+            double uploadSpeed = MyNetwork.GetUploadSpeed();
+
+            if (downloadSpeed > 0)
             {
                 if (InvokeRequired)
                 {
                     // after we've done all the processing, 
                     Invoke(new MethodInvoker(delegate
                     {
-                        SetUploadSpeedAndDownloadSpeed(speed, speed);
+                        SetUploadSpeedAndDownloadSpeed(downloadSpeed, uploadSpeed);
                     }));
                 }
                 else
                 {
-                    SetUploadSpeedAndDownloadSpeed(speed, speed);
+                    SetUploadSpeedAndDownloadSpeed(downloadSpeed, uploadSpeed);
                 }
                 _timer.Enabled = true;
             }
@@ -64,6 +66,7 @@ namespace NetworkStatusChecker
 
         private void pingTimer_Tick(object sender, ElapsedEventArgs e)
         {
+            LogWriter.WriteLog();
             if (MyNetwork.GetNetworkStatus()!=_isAvailableNetwork)
             {
                 _isAvailableNetwork = MyNetwork.GetNetworkStatus();
@@ -195,7 +198,7 @@ namespace NetworkStatusChecker
         private void SetUploadSpeedAndDownloadSpeed(double downloadSpeed, double uploadSpeed)
         {
             labelStatus.Text = Messages.SpeedHead;
-            labelInformation.Text = Messages.GetSpeedMessage(downloadSpeed);
+            labelInformation.Text = Messages.GetSpeedMessage(downloadSpeed, uploadSpeed);
             //BackColor = System.Drawing.Color.Red;
             pictureBox.Image = Properties.Resources.information;
         }
