@@ -2,12 +2,11 @@
 using System.IO;
 using System.Reflection;
 using System.Runtime.Remoting.Messaging;
-using System.Xml;
 using static LogService.LogUtility;
 
 namespace LogService
 {
-    
+
     public class Log
     {
         
@@ -257,12 +256,14 @@ namespace LogService
                 }
             }
         }
-
+        string path;
+        PropertyInfo[] propertyInfos;
+        string message;
         public void CustomLog(object obj)
         {
-            string path = LogConfig.DefaultPath;
-            PropertyInfo[] propertyInfos = GetProperties(obj);
-            var message = string.Empty;
+            path = LogConfig.DefaultPath;
+            propertyInfos = GetProperties(obj);
+            message = string.Empty;
             message = AppendText(message, DateTime.Now.ToShortDateString());
             message = AppendText(message, DateTime.Now.ToLongTimeString());
             foreach (PropertyInfo p in propertyInfos)

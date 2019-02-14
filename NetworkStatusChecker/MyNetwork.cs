@@ -9,6 +9,13 @@ namespace NetworkStatusChecker
 
     public class MyNetwork
     {
+        private static Ping p = new Ping();
+        private static PingReply r;
+        private static string url = "www.google.com";
+        private static WebClient webClient = new WebClient() { Credentials = new NetworkCredential("erp", "erp123") };
+        private static Stopwatch sw;
+        private static FileInfo fileInfo;
+        private static double speed = 0;
         public enum Type
         {
             Download,
@@ -16,11 +23,8 @@ namespace NetworkStatusChecker
         }
         private static double GetSpeed(Type type)
         {
-            WebClient webClient = new WebClient();
-            webClient.Credentials = new NetworkCredential("erp", "erp123");
-            Stopwatch sw = Stopwatch.StartNew();
-            FileInfo fileInfo;
-            double speed = 0;
+            sw = Stopwatch.StartNew();
+            speed = 0;
             try
             {
 
@@ -40,7 +44,7 @@ namespace NetworkStatusChecker
                 
                 
             }
-            catch(Exception ex)
+            catch
             {
                 return 0;
             }
@@ -63,14 +67,9 @@ namespace NetworkStatusChecker
         public static bool GetNetworkStatus()
         {
             //return NetworkInterface.GetIsNetworkAvailable();
-            Ping p = new Ping();
-            PingReply r;
-            string s;
-            s = "www.google.com";
-
             try
             {
-                r = p.Send(s);
+                r = p.Send(url);
             }
             catch
             {

@@ -13,6 +13,11 @@ namespace NetworkStatusChecker
         private bool _isShown = false,_isAvailableNetwork=true,_networkStatus;
         private readonly int _holdTimer = 300;
         private int _counter = 0;
+
+        private int animationInterval = 5;
+        private int networkCheckInterval = 1000; // 1 sec
+        private int speedCheckInterval = 3600000; // 1 hour
+
         public MainForm()
         {
             InitializeComponent();
@@ -21,18 +26,18 @@ namespace NetworkStatusChecker
         {
             // Create and run timer for animation
             _timer = new System.Timers.Timer();
-            _timer.Interval = 5;
+            _timer.Interval = animationInterval;
             _timer.Elapsed += new ElapsedEventHandler(timer_Tick);
 
             //create and run timer for ping and network test 
             _pingTimer = new System.Timers.Timer();
-            _pingTimer.Interval = 1000;
+            _pingTimer.Interval = networkCheckInterval;
             _pingTimer.Elapsed += new ElapsedEventHandler(pingTimer_Tick);
             _pingTimer.Enabled = true;
 
             //create and run timer for upload and download speed test
             _speedTestTimer = new System.Timers.Timer();
-            _speedTestTimer.Interval = 15000;
+            _speedTestTimer.Interval = speedCheckInterval;
             _speedTestTimer.Elapsed += new ElapsedEventHandler(speedTestTimer_Tick);
             _speedTestTimer.Enabled = true;
         }
