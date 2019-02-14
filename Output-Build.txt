@@ -1,0 +1,11 @@
+﻿1>------ Build started: Project: NetworkStatusChecker, Configuration: Debug Any CPU ------
+1>F:\Projects\Akij Group\Desktop\NetworkStatusChecker\NetworkStatusChecker\MyNetwork.cs(43,29,43,31): warning CS0168: The variable 'ex' is declared but never used
+1>  NetworkStatusChecker -> F:\Projects\Akij Group\Desktop\NetworkStatusChecker\NetworkStatusChecker\bin\Debug\NetworkStatusChecker.exe
+Building NetworkStatusChecker...
+2>------ Publish started: Project: NetworkStatusChecker, Configuration: Debug Any CPU ------
+Connecting to 'C:\Users\Mahi\Desktop\NetworkStatusChecker\'...
+Publishing files...
+Publish success.
+C:\Users\Mahi\Desktop\NetworkStatusChecker\
+========== Build: 1 succeeded, 0 failed, 1 up-to-date, 0 skipped ==========
+========== Publish: 1 succeeded, 0 failed, 0 skipped ==========
