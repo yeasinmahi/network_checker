@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetworkStatusChecker", "Net
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LogService", "LogService\LogService.csproj", "{696C976D-A6E6-41C9-82E5-F0F242AEE796}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Setup", "Setup\Setup.vdproj", "{801041B7-BCFC-4962-B657-EAC735D8AA30}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,9 @@ Global
 		{696C976D-A6E6-41C9-82E5-F0F242AEE796}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{696C976D-A6E6-41C9-82E5-F0F242AEE796}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{696C976D-A6E6-41C9-82E5-F0F242AEE796}.Release|Any CPU.Build.0 = Release|Any CPU
+		{801041B7-BCFC-4962-B657-EAC735D8AA30}.Debug|Any CPU.ActiveCfg = Release
+		{801041B7-BCFC-4962-B657-EAC735D8AA30}.Debug|Any CPU.Build.0 = Release
+		{801041B7-BCFC-4962-B657-EAC735D8AA30}.Release|Any CPU.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

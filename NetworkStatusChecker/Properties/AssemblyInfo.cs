@@ -6,12 +6,12 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("NetworkStatusChecker")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("This Application is to test your network. It will gives notification in network up/down. It also provide information about internet speed. This application write all information into a log file which will be on document folder.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("DevFolder")]
 [assembly: AssemblyProduct("NetworkStatusChecker")]
 [assembly: AssemblyCopyright("Copyright ©  2019")]
-[assembly: AssemblyTrademark("")]
+[assembly: AssemblyTrademark("DevFolder")]
 [assembly: AssemblyCulture("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible

@@ -92,7 +92,6 @@
             this.KeyPreview = true;
             this.Name = "MainForm";
             this.Opacity = 0.9D;
-            this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.Text = "Network Status Cheker";
             this.TopMost = true;
