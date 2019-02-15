@@ -16,7 +16,7 @@ namespace NetworkStatusChecker
         private int _counter;
 
         private readonly int _animationInterval = 5;
-        private readonly int _networkCheckInterval = 1000; // 1 sec
+        private readonly int _networkCheckInterval = 5000; // 1 sec
         private readonly int _speedCheckInterval = 3600000; // 1 hour
 
         private NotifyIcon _trayIcon;
@@ -46,7 +46,7 @@ namespace NetworkStatusChecker
 
         private void ShowStatus(object sender, EventArgs e)
         {
-            StartAnimation();
+            SetNetworkStatus(MyNetwork.GetNetworkStatus());
         }
 
         void Exit(object sender, EventArgs e)
@@ -174,10 +174,6 @@ namespace NetworkStatusChecker
             _isShown = false;
             _counter = 0;
             _timer.Enabled = false;
-        }
-        public void StartAnimation()
-        {
-            _timer.Enabled = true;
         }
         private void MainForm_Load(object sender, EventArgs e)
         {

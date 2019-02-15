@@ -10,7 +10,7 @@ namespace NetworkStatusChecker
     {
         private static readonly Ping P = new Ping();
         private static PingReply _r;
-        private static readonly string Url = "www.google.com";
+        
         private static readonly WebClient WebClient = new WebClient() { Credentials = new NetworkCredential("erp", "erp123") };
         private static Stopwatch _sw;
         private static FileInfo _fileInfo;
@@ -61,7 +61,7 @@ namespace NetworkStatusChecker
             //return NetworkInterface.GetIsNetworkAvailable();
             try
             {
-                _r = P.Send(Url);
+                _r = P.Send(Messages.PingUrl);
             }
             catch
             {
