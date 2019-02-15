@@ -256,19 +256,19 @@ namespace LogService
                 }
             }
         }
-        string path;
-        PropertyInfo[] propertyInfos;
-        string message;
+        string _path;
+        PropertyInfo[] _propertyInfos;
+        string _message;
         public void CustomLog(object obj)
         {
-            path = LogConfig.DefaultPath;
-            propertyInfos = GetProperties(obj);
-            message = string.Empty;
-            message = AppendText(message, DateTime.Now.ToShortDateString());
-            message = AppendText(message, DateTime.Now.ToLongTimeString());
-            foreach (PropertyInfo p in propertyInfos)
+            _path = LogConfig.DefaultPath;
+            _propertyInfos = GetProperties(obj);
+            _message = string.Empty;
+            _message = AppendText(_message, DateTime.Now.ToShortDateString());
+            _message = AppendText(_message, DateTime.Now.ToLongTimeString());
+            foreach (PropertyInfo p in _propertyInfos)
             {
-                message = AppendText(message, p.GetValue(obj, null).ToString());
+                _message = AppendText(_message, p.GetValue(obj, null).ToString());
             }
             if (LogConfig.BuildMode.Equals(BuildMode.Debug))
             {
@@ -276,22 +276,22 @@ namespace LogService
                 {
                     lock (LogConfig.GetLocker())
                     {
-                        if (!Directory.Exists(Path.GetDirectoryName(path)))
+                        if (!Directory.Exists(Path.GetDirectoryName(_path)))
                         {
-                            Directory.CreateDirectory(Path.GetDirectoryName(path));
+                            Directory.CreateDirectory(Path.GetDirectoryName(_path));
                         }
-                        if (!File.Exists(path))
+                        if (!File.Exists(_path))
                         {
                             // Create a file to write to.
-                            using (StreamWriter sw = File.CreateText(path))
+                            using (StreamWriter sw = File.CreateText(_path))
                             {
-                                sw.WriteLine(message);
+                                sw.WriteLine(_message);
                             }
                         }
                         // append a file with existing.
-                        using (StreamWriter sw = File.AppendText(path))
+                        using (StreamWriter sw = File.AppendText(_path))
                         {
-                            sw.WriteLine(message);
+                            sw.WriteLine(_message);
                         }
 
                     }
@@ -301,7 +301,7 @@ namespace LogService
                 {
                     lock (LogConfig.GetLocker())
                     {
-                        File.WriteAllText(path, exception.Message);
+                        File.WriteAllText(_path, exception.Message);
                     }
                 }
             }

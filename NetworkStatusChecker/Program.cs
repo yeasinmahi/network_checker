@@ -1,14 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace NetworkStatusChecker
 {
     static class Program
     {
-        private static string appGuid = "dd76e002-4d0e-4809-afe9-ecfaad80e9f9";
+        private const string AppGuid = "dd76e002-4d0e-4809-afe9-ecfaad80e9f9";
 
         /// <summary>
         /// The main entry point for the application.
@@ -18,11 +16,11 @@ namespace NetworkStatusChecker
         {
             
 
-            using (Mutex mutex = new Mutex(false, "Global\\" + appGuid))
+            using (Mutex mutex = new Mutex(false, "Global\\" + AppGuid))
             {
                 if (!mutex.WaitOne(0, false))
                 {
-                    MessageBox.Show("Instance already running");
+                    MessageBox.Show(@"Instance already running");
                     return;
                 }
                 Application.EnableVisualStyles();

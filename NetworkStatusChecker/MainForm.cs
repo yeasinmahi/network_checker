@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NetworkStatusChecker.Properties;
+using System;
 using System.Net.NetworkInformation;
 using System.Timers;
 using System.Windows.Forms;
@@ -10,35 +11,65 @@ namespace NetworkStatusChecker
         private System.Timers.Timer _timer,_pingTimer,_speedTestTimer;
         private int _startPosX;
         private int _startPosY;
-        private bool _isShown = false,_isAvailableNetwork=true,_networkStatus;
+        private bool _isShown,_isAvailableNetwork=true,_networkStatus;
         private readonly int _holdTimer = 300;
-        private int _counter = 0;
+        private int _counter;
 
-        private int animationInterval = 5;
-        private int networkCheckInterval = 1000; // 1 sec
-        private int speedCheckInterval = 3600000; // 1 hour
+        private readonly int _animationInterval = 5;
+        private readonly int _networkCheckInterval = 1000; // 1 sec
+        private readonly int _speedCheckInterval = 3600000; // 1 hour
 
+        private NotifyIcon _trayIcon;
         public MainForm()
         {
             InitializeComponent();
+            InitSystemTray();
+        }
+        public void InitSystemTray()
+        {
+            _trayIcon = new NotifyIcon()
+            {
+                Icon = Resources.network,
+                ContextMenu = new ContextMenu(new[] {
+                new MenuItem("Exit", Exit),
+                new MenuItem("Show Status",ShowStatus),
+                new MenuItem("Show Speed",ShowSpeed),
+            }),
+                Visible = true
+            };
+        }
+
+        private void ShowSpeed(object sender, EventArgs e)
+        {
+            speedTestTimer_Tick(null,null);
+        }
+
+        private void ShowStatus(object sender, EventArgs e)
+        {
+            StartAnimation();
+        }
+
+        void Exit(object sender, EventArgs e)
+        {
+            // Hide tray icon, otherwise it will remain shown until user mouses over it
+            _trayIcon.Visible = false;
+
+            Application.Exit();
         }
         public void CreateTimer()
         {
             // Create and run timer for animation
-            _timer = new System.Timers.Timer();
-            _timer.Interval = animationInterval;
-            _timer.Elapsed += new ElapsedEventHandler(timer_Tick);
+            _timer = new System.Timers.Timer {Interval = _animationInterval};
+            _timer.Elapsed += timer_Tick;
 
             //create and run timer for ping and network test 
-            _pingTimer = new System.Timers.Timer();
-            _pingTimer.Interval = networkCheckInterval;
-            _pingTimer.Elapsed += new ElapsedEventHandler(pingTimer_Tick);
+            _pingTimer = new System.Timers.Timer {Interval = _networkCheckInterval};
+            _pingTimer.Elapsed += pingTimer_Tick;
             _pingTimer.Enabled = true;
 
             //create and run timer for upload and download speed test
-            _speedTestTimer = new System.Timers.Timer();
-            _speedTestTimer.Interval = speedCheckInterval;
-            _speedTestTimer.Elapsed += new ElapsedEventHandler(speedTestTimer_Tick);
+            _speedTestTimer = new System.Timers.Timer {Interval = _speedCheckInterval};
+            _speedTestTimer.Elapsed += speedTestTimer_Tick;
             _speedTestTimer.Enabled = true;
         }
 
@@ -134,16 +165,24 @@ namespace NetworkStatusChecker
             }
             if (_isShown && _startPosY > Screen.PrimaryScreen.WorkingArea.Height + Height)
             {
-                _isShown = false;
-                _counter = 0;
-                _timer.Enabled = false;
+                StopAnimation();
             }
 
+        }
+        public void StopAnimation()
+        {
+            _isShown = false;
+            _counter = 0;
+            _timer.Enabled = false;
+        }
+        public void StartAnimation()
+        {
+            _timer.Enabled = true;
         }
         private void MainForm_Load(object sender, EventArgs e)
         {
             SetNetworkStatus(MyNetwork.GetNetworkStatus());
-            NetworkChange.NetworkAvailabilityChanged += new NetworkAvailabilityChangedEventHandler(NetworkChange_NetworkAvailabilityChanged);
+            NetworkChange.NetworkAvailabilityChanged += NetworkChange_NetworkAvailabilityChanged;
 
         }
 
@@ -191,7 +230,7 @@ namespace NetworkStatusChecker
             labelStatus.Text = Messages.NetworkHead;
             labelInformation.Text = Messages.NetworkMessageUp;
             //BackColor = System.Drawing.Color.Green;
-            pictureBox.Image = Properties.Resources.success;
+            pictureBox.Image = Resources.success;
             LogWriter.WriteLog("'Network UP'",MyNetwork.GetDownloadSpeed(), MyNetwork.GetUploadSpeed());
         }
         private void SetNetworkDown()
@@ -199,7 +238,7 @@ namespace NetworkStatusChecker
             labelStatus.Text = Messages.NetworkHead;
             labelInformation.Text = Messages.NetworkMessageDown;
             //BackColor = System.Drawing.Color.Red;
-            pictureBox.Image = Properties.Resources.error;
+            pictureBox.Image = Resources.error;
             LogWriter.WriteLog("'Network Down'", 0,0);
         }
         private void SetUploadSpeedAndDownloadSpeed(double downloadSpeed, double uploadSpeed)
@@ -207,14 +246,14 @@ namespace NetworkStatusChecker
             labelStatus.Text = Messages.SpeedHead;
             labelInformation.Text = Messages.GetSpeedMessage(downloadSpeed, uploadSpeed);
             //BackColor = System.Drawing.Color.Red;
-            pictureBox.Image = Properties.Resources.information;
+            pictureBox.Image = Resources.information;
             LogWriter.WriteLog("'Net Speed Test'", downloadSpeed, uploadSpeed);
         }
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
             if (keyData == (Keys.Control | Keys.E))
             {
-                DialogResult dialog = MessageBox.Show("Do you really want to close the program?", "Network Status Checker ", MessageBoxButtons.YesNo);
+                DialogResult dialog = MessageBox.Show(@"Do you really want to close the program?", @"Network Status Checker ", MessageBoxButtons.YesNo);
                 if (dialog == DialogResult.Yes)
                 {
                     Application.Exit();

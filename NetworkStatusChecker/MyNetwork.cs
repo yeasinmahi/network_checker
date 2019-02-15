@@ -1,5 +1,4 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Net.NetworkInformation;
@@ -9,13 +8,13 @@ namespace NetworkStatusChecker
 
     public class MyNetwork
     {
-        private static Ping p = new Ping();
-        private static PingReply r;
-        private static string url = "www.google.com";
-        private static WebClient webClient = new WebClient() { Credentials = new NetworkCredential("erp", "erp123") };
-        private static Stopwatch sw;
-        private static FileInfo fileInfo;
-        private static double speed = 0;
+        private static readonly Ping P = new Ping();
+        private static PingReply _r;
+        private static readonly string Url = "www.google.com";
+        private static readonly WebClient WebClient = new WebClient() { Credentials = new NetworkCredential("erp", "erp123") };
+        private static Stopwatch _sw;
+        private static FileInfo _fileInfo;
+        private static double _speed;
         public enum Type
         {
             Download,
@@ -23,23 +22,23 @@ namespace NetworkStatusChecker
         }
         private static double GetSpeed(Type type)
         {
-            sw = Stopwatch.StartNew();
-            speed = 0;
+            _sw = Stopwatch.StartNew();
+            _speed = 0;
             try
             {
 
                 if (type.Equals(Type.Download))
                 {
-                    webClient.DownloadFile(Messages.DownloadUrl, Messages.Tempfile);
-                    sw.Stop();
-                    fileInfo = new FileInfo(Messages.Tempfile);
-                    speed =  (fileInfo.Length / (sw.Elapsed.Milliseconds * 1.024*1024));
+                    WebClient.DownloadFile(Messages.DownloadUrl, Messages.Tempfile);
+                    _sw.Stop();
+                    _fileInfo = new FileInfo(Messages.Tempfile);
+                    _speed =  (_fileInfo.Length / (_sw.Elapsed.Milliseconds * 1.024*1024));
                 }
                 else
                 {
-                    webClient.UploadData(Messages.UploadUrl, Properties.Resources.a);
-                    sw.Stop();
-                    speed =  (Properties.Resources.a.Length / (sw.Elapsed.Milliseconds * 1.024*1024));
+                    WebClient.UploadData(Messages.UploadUrl, Properties.Resources.a);
+                    _sw.Stop();
+                    _speed =  (Properties.Resources.a.Length / (_sw.Elapsed.Milliseconds * 1.024*1024));
                 }
                 
                 
@@ -48,16 +47,9 @@ namespace NetworkStatusChecker
             {
                 return 0;
             }
-            if (type.Equals(Type.Download))
-            {
-                FileHelper.DeleteFile(Messages.Tempfile);
-            }
-            else
-            {
-                FileHelper.DeleteFile(Messages.UploadUrl);
-            }
-            
-            return speed;
+            FileHelper.DeleteFile(type.Equals(Type.Download) ? Messages.Tempfile : Messages.UploadUrl);
+
+            return _speed;
             
         }
         public static double GetDownloadSpeed()
@@ -69,14 +61,14 @@ namespace NetworkStatusChecker
             //return NetworkInterface.GetIsNetworkAvailable();
             try
             {
-                r = p.Send(url);
+                _r = P.Send(Url);
             }
             catch
             {
                 return false;
             }
 
-            return r.Status == IPStatus.Success;
+            return _r != null && _r.Status == IPStatus.Success;
         }
 
         public static double GetUploadSpeed()

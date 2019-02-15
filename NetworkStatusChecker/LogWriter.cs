@@ -7,7 +7,7 @@ namespace NetworkStatusChecker
     {
         public static void WriteLog(string action, double downloadSpeed, double uploadSpeed )
         {
-            string localIpAddress = Network.GetLocalIPAddress();
+            string localIpAddress = Network.GetLocalIpAddress();
             dynamic obj = new
             {
                 Environment.UserDomainName,
