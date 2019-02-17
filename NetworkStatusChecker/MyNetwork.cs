@@ -41,7 +41,6 @@ namespace NetworkStatusChecker
                     _speed =  (Properties.Resources.a.Length / (_sw.Elapsed.Milliseconds * 1.024*1024));
                 }
                 
-                
             }
             catch
             {

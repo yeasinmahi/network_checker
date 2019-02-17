@@ -100,6 +100,13 @@ namespace NetworkStatusChecker
             }
         }
 
+        //public void popUpNotifier()
+        //{
+        //    PopupNotifier popup = new PopupNotifier();
+        //    popup.TitleText = "BE HAPPY";
+        //    popup.ContentText = "Thank you";
+        //    popup.Popup();
+        //}
         private void pingTimer_Tick(object sender, ElapsedEventArgs e)
         {
             _networkStatus = MyNetwork.GetNetworkStatus();
